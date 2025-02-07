@@ -20,7 +20,6 @@ fn empty_grid() {
 
 #[test]
 fn grid_constraints() {
-    const N: usize = 3;
     let grid = Grid([[1, 0, 0], [0, 2, 0], [0, 0, 3]]);
     let cages = vec![];
 
