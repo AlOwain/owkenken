@@ -41,25 +41,6 @@ impl<const N: usize> Domain<N> {
         }
     }
 
-    #[inline]
-    fn len(self: &Self) -> usize {
-        self.0.len()
-    }
-
-    fn count(self: &Self) -> usize {
-        let mut count = 0;
-        for row in self.iter() {
-            for cell in row {
-                for val in cell {
-                    if *val {
-                        count += 1;
-                    }
-                }
-            }
-        }
-        count
-    }
-
     pub(super) fn new(grid: &Grid<N>, cages: &[Cage]) -> Self {
         let domain = Domain([[[true; N]; N]; N]);
         domain.domain(grid, cages)
