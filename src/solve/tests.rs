@@ -8,6 +8,16 @@ mod solve {
     };
 
     #[test]
+    fn empty_3x3() {
+        const N: usize = 3;
+        let grid = Grid([[0u8; N]; N]);
+        let cages = vec![];
+
+        let solved = grid.solve(&cages).unwrap();
+        assert_eq!(validate::State::Valid, validate::all(&cages, &solved));
+    }
+
+    #[test]
     fn t1() {
         const N: usize = 3;
         let grid = Grid([[0u8; N]; N]);
