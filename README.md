@@ -11,6 +11,7 @@
   - Multithreading is immediately applicable via recursion.
 - Naïvete
   - Instead of recalculating the entire domain at each move, you can invalidate rows or columns.
+  - Use MRV with LCV for the value
 
 # Notes
 
