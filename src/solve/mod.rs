@@ -5,11 +5,7 @@ use crate::{
     Cage, Domain, Grid,
 };
 
-#[derive(Debug)]
-pub struct Move {
-    pub val: u8,
-    pub pos: (u8, u8),
-}
+type Move = (u8, (u8, u8));
 
 impl<const N: usize> Grid<N> {
     pub fn next_move(self: &Self, domain: &Domain<N>) -> Option<Move> {
@@ -24,7 +20,7 @@ impl<const N: usize> Grid<N> {
                 match next {
                     Some(ref old)
                         if domain[x][y].iter().filter(|&&b| b).count()
-                            < domain[old.pos.0 as usize][old.pos.1 as usize]
+                            < domain[old.1 .0 as usize][old.1 .1 as usize]
                                 .iter()
                                 .filter(|&&b| b)
                                 .count() =>
@@ -41,10 +37,7 @@ impl<const N: usize> Grid<N> {
                     None => continue,
                 };
 
-                next = Some(Move {
-                    val,
-                    pos: (x as u8, y as u8),
-                });
+                next = Some((val, (x as u8, y as u8)));
             }
         }
 
@@ -82,9 +75,9 @@ impl<const N: usize> Grid<N> {
                 }
             };
 
-            self[mv.pos.0 as usize][mv.pos.1 as usize] = mv.val + 1;
-            domain[mv.pos.0 as usize][mv.pos.1 as usize][mv.val as usize] = false;
-            steps.push((mv.pos, domain));
+            self[mv.1 .0 as usize][mv.1 .1 as usize] = mv.0 + 1;
+            domain[mv.1 .0 as usize][mv.1 .1 as usize][mv.0 as usize] = false;
+            steps.push((mv.1, domain));
         }
     }
 }
