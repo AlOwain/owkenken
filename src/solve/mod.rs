@@ -1,3 +1,5 @@
+use tracing::{trace, trace_span};
+
 mod tests;
 
 use crate::{
@@ -45,13 +47,35 @@ impl<const N: usize> Grid<N> {
     }
 
     pub fn solve(mut self, cages: &[Cage]) -> Option<Self> {
+        let mut consecutive_moves = 0;
+        let mut consecutive_backtracks = 0;
         let mut steps: Vec<((u8, u8), Domain<N>)> = Vec::new();
         let mut domain: Domain<N>;
         let mut backtrack = false;
+
+        let span = trace_span!("solve");
+        let mut _guard = span.enter();
         loop {
             if backtrack {
                 let prev;
+                consecutive_backtracks += 1;
+
                 (prev, domain) = steps.pop()?;
+                // TODO: ideally, the domain should be pruned here, right?
+                trace!(
+                    "Backtracking #{consecutive_backtracks}: moves={consecutive_moves} pos=({x}, {y})",
+                    x = prev.0,
+                    y = prev.1,
+                    consecutive_moves = consecutive_moves,
+                    consecutive_backtracks = consecutive_backtracks
+                );
+
+                // This drops the previous span guard and creates a new one at each backtrack.
+                // This should not be `let _ = ...`, as the span is left when it is dropped.
+                // and the `_` name immediately drops it.
+                drop(_guard);
+                _guard = span.enter();
+                consecutive_moves = 0;
                 self[prev.0 as usize][prev.1 as usize] = 0;
                 backtrack = false;
             } else {
@@ -74,6 +98,15 @@ impl<const N: usize> Grid<N> {
                     continue;
                 }
             };
+
+            consecutive_moves += 1;
+            consecutive_backtracks = 0;
+            trace!(
+                "Making move #{consecutive_moves}: val={val}, pos=({x}, {y})",
+                val = mv.0,
+                x = mv.1 .0,
+                y = mv.1 .1,
+            );
 
             self[mv.1 .0 as usize][mv.1 .1 as usize] = mv.0 + 1;
             domain[mv.1 .0 as usize][mv.1 .1 as usize][mv.0 as usize] = false;
