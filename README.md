@@ -26,3 +26,4 @@
     1. Still solvable
     2. If not solvable then the difference in the domain must not exclude any valid states.
 - Use `rstest` to simplify the tests
+- Use `criterion` to create benchmarks
