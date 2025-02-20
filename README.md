@@ -10,6 +10,7 @@
 - Parallelism
   - Multithreading is immediately applicable via recursion.
 - Naïvete
+  - Build upon the domain of the earlier move, if a move did not work for the parent move, then it won't work for the child.
   - Instead of recalculating the entire domain at each move, you can invalidate rows or columns.
   - Use MRV with LCV for the value
 
@@ -24,3 +25,4 @@
   - The correctness of the exclusive algorithm can be proven by checking if the problem is:
     1. Still solvable
     2. If not solvable then the difference in the domain must not exclude any valid states.
+- Use `rstest` to simplify the tests
