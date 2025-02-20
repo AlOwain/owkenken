@@ -15,7 +15,12 @@
 
 # Notes
 
-- See the effect of using a u16 instead of a u8
+- Benchmark the effect of using a u16 instead of a u8
   - Cache misses are probably higher
   - Memory required is higher
   - Conversion between the types probably costs a bit more
+- To compare any two domain pruning algorithms
+  - The more inclusive one will always be slower,
+  - The correctness of the exclusive algorithm can be proven by checking if the problem is:
+    1. Still solvable
+    2. If not solvable then the difference in the domain must not exclude any valid states.
