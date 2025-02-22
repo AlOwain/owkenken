@@ -168,6 +168,7 @@ mod solve {
             // FIXME: Continue
         ];
 
+        todo!("Continue the cages");
         assert_eq!(validate::all(&cages, &grid.solve(&cages).unwrap()), Valid);
     }
 }
