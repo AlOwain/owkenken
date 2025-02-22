@@ -22,9 +22,11 @@ fn orthogonal<const N: usize>(grid: &Grid<N>) -> State {
             }
             for k in j + 1..grid.len() {
                 if grid[i][j] == grid[i][k] {
+                    assert!(grid[i][j] != 0 || grid[i][k] != 0);
                     return Unsatisfiable;
                 }
-                if grid[j][i] == grid[k][i] {
+                if grid[j][i] == grid[k][i] && grid[j][i] != 0 {
+                    assert!(grid[j][i] != 0 || grid[k][i] != 0);
                     return Unsatisfiable;
                 }
             }
