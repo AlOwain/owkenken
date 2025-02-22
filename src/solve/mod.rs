@@ -1,4 +1,4 @@
-use tracing::{trace, trace_span};
+use tracing::{debug, trace, trace_span};
 
 mod tests;
 
@@ -46,6 +46,7 @@ impl<const N: usize> Grid<N> {
     pub fn solve(mut self, cages: &[Cage]) -> Option<Self> {
         let mut consecutive_moves = 0;
         let mut consecutive_backtracks = 0;
+        let mut moves: u64 = 0;
         let mut steps: Vec<((u8, u8), Domain<N>)> = Vec::new();
         let mut domain: Domain<N>;
         let mut backtrack = false;
@@ -59,12 +60,10 @@ impl<const N: usize> Grid<N> {
 
                 (prev, domain) = steps.pop()?;
                 // TODO: ideally, the domain should be pruned here, right?
-                trace!(
+                debug!(
                     "Backtracking #{consecutive_backtracks}: moves={consecutive_moves} pos=({x}, {y})",
                     x = prev.0,
                     y = prev.1,
-                    consecutive_moves = consecutive_moves,
-                    consecutive_backtracks = consecutive_backtracks
                 );
 
                 // This drops the previous span guard and creates a new one at each backtrack.
@@ -98,16 +97,22 @@ impl<const N: usize> Grid<N> {
 
             consecutive_moves += 1;
             consecutive_backtracks = 0;
-            trace!(
-                "Making move #{consecutive_moves}: val={val}, pos=({x}, {y})",
-                val = mv.0,
-                x = mv.1 .0,
-                y = mv.1 .1,
-            );
+            if consecutive_moves > N {
+                trace!(
+                    "Making move #{consecutive_moves}: val={val}, pos=({x}, {y})",
+                    val = mv.0,
+                    x = mv.1 .0,
+                    y = mv.1 .1,
+                );
+            }
 
             self[mv.1 .0 as usize][mv.1 .1 as usize] = mv.0 + 1;
             domain[mv.1 .0 as usize][mv.1 .1 as usize][mv.0 as usize] = false;
             steps.push((mv.1, domain));
+            if moves % 100 == 0 {
+                trace!("Move #{moves}: grid={self:?}");
+            }
+            moves += 1;
         }
     }
 }
