@@ -19,6 +19,9 @@ impl<const N: usize> Grid<N> {
                     continue;
                 }
 
+                let val = domain[x][y].iter().position(|&v| v).map(|v| v as u8)?;
+
+                // What are we doing here exactly? Is it optimal to pick the value with the smallest domain
                 match next {
                     Some(ref old)
                         if domain[x][y].iter().filter(|&&b| b).count()
@@ -32,12 +35,6 @@ impl<const N: usize> Grid<N> {
                     None => (),
                     _ => continue,
                 }
-
-                let val = domain[x][y].iter().position(|&v| v).map(|v| v as u8);
-                let val = match val {
-                    Some(val) => val,
-                    None => continue,
-                };
 
                 next = Some((val, (x as u8, y as u8)));
             }
